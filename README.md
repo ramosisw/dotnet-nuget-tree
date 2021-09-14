@@ -1,5 +1,5 @@
 # dotnet-nuget-tree
-[![Build Status](https://img.shields.io/travis/ramosisw/dotnet-nuget-tree/master.svg?style=flat-square&logo=travis)](https://travis-ci.org/ramosisw/dotnet-nuget-tree)
+[![.NET](https://github.com/ramosisw/dotnet-nuget-tree/actions/workflows/dotnet.yml/badge.svg)](https://github.com/ramosisw/dotnet-nuget-tree/actions/workflows/dotnet.yml)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square&logo=read-the-docs)](https://github.com/ramosisw/dotnet-nuget-tree/blob/master/LICENSE)
 [![NuGet Version](https://img.shields.io/nuget/v/dotnet-nuget-tree.svg?style=flat-square&logo=nuget)](https://www.nuget.org/packages/dotnet-nuget-tree/)
 [![NuGet Download](https://img.shields.io/nuget/dt/dotnet-nuget-tree.svg?style=flat-square&logo=nuget)](https://www.nuget.org/packages/dotnet-nuget-tree/)
