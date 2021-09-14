@@ -1,0 +1,10 @@
+os: windows
+language: csharp
+mono: none
+
+script:
+  - cd src
+  - dotnet build
+
+notifications:
+  email: false
