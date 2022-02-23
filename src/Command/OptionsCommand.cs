@@ -8,7 +8,7 @@ namespace dotnet.nuget.tree.Command
 {
     public class OptionsCommand
     {
-        public int Deep { get; set; } = 2;
+        public int Deep { get; set; } = 1;
         public string Configuration { get; set; }
         public string PathProject { get; set; }
         public List<Project> ProjectList { get; set; } = new List<Project>();
