@@ -2,7 +2,7 @@
   <PropertyGroup>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
-    <Version>1.0.4</Version>
+    <Version>1.0.5</Version>
   </PropertyGroup>
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -10,7 +10,8 @@
     <RootNamespace>dotnet.nuget.tree</RootNamespace>
   </PropertyGroup>
   <PropertyGroup>
-    <Description>A global .NET Core tool that helps to generate tests classes based on project file</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Description>A global .NET Core tool that helps to list libs of project</Description>
     <Authors>Julio C. Ramos</Authors>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>dotnet-nuget-tree</ToolCommandName>
