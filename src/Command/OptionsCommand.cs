@@ -23,7 +23,7 @@ namespace dotnet.nuget.tree.Command
         public static OptionsCommand Parse(string[] args)
         {
             var validOptions = new[] {
-                "-c", "--configuration",
+                // "-c", "--configuration",
                 // "-o", "--output-dir",
                 "-d", "--deep",
                 "-v", "--verbosity",
@@ -69,7 +69,8 @@ namespace dotnet.nuget.tree.Command
                         break;
                     case "-t":
                     case "--tree":
-                        if (!bool.TryParse(argValue, out var tree))
+                        var tree = true;
+                        if (!string.IsNullOrWhiteSpace(argValue) && !bool.TryParse(argValue, out tree))
                             throw new ArgumentException($"Unknown value {argName}={argValue}; expects true or false.");
                         optionsCommand.Tree = tree;
                         break;
