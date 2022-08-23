@@ -1,6 +1,6 @@
 # dotnet-nuget-tree
-[![.NET](https://github.com/ramosisw/dotnet-nuget-tree/actions/workflows/dotnet.yml/badge.svg)](https://github.com/ramosisw/dotnet-nuget-tree/actions/workflows/push-build.yml)
-[![.NET](https://github.com/ramosisw/dotnet-nuget-tree/actions/workflows/dotnet.yml/badge.svg)](https://github.com/ramosisw/dotnet-nuget-tree/actions/workflows/build-deploy.yml)
+[![.NET](https://github.com/ramosisw/dotnet-nuget-tree/actions/workflows/push-build.yml/badge.svg)](https://github.com/ramosisw/dotnet-nuget-tree/actions/workflows/push-build.yml)
+[![.NET](https://github.com/ramosisw/dotnet-nuget-tree/actions/workflows/build-deploy.yml/badge.svg)](https://github.com/ramosisw/dotnet-nuget-tree/actions/workflows/build-deploy.yml)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square&logo=read-the-docs)](https://github.com/ramosisw/dotnet-nuget-tree/blob/master/LICENSE)
 [![NuGet Version](https://img.shields.io/nuget/v/dotnet-nuget-tree.svg?style=flat-square&logo=nuget)](https://www.nuget.org/packages/dotnet-nuget-tree/)
 [![NuGet Download](https://img.shields.io/nuget/dt/dotnet-nuget-tree.svg?style=flat-square&logo=nuget)](https://www.nuget.org/packages/dotnet-nuget-tree/)
