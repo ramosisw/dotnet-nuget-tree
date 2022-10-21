@@ -50,10 +50,6 @@ namespace dotnet.nuget.tree
                 Console.WriteLine(ex.Message + "\n");
                 HelpCommand.WriteHelp();
             }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
         }
 
         private static void PrintTree(OptionsCommand options)
