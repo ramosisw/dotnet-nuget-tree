@@ -123,54 +123,40 @@ namespace dotnet.nuget.tree.Command
         private static List<ProjectPackage> GetPackages(string fullProjectPath)
         {
             var packages = new List<ProjectPackage>();
-            try
-            {
-                var projDefinition = XDocument.Load(fullProjectPath);
-                packages = projDefinition
-                    .Element("Project")
-                    .Elements("ItemGroup")
-                    .Elements("PackageReference")
-                    .Select(e => new ProjectPackage
-                    {
-                        Name = e.Attribute("Include").Value,
-                        Version = e.Attribute("Version").Value
-                    })
-                    .ToList();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            var projDefinition = XDocument.Load(fullProjectPath);
+            packages = projDefinition
+                .Element("Project")
+                .Elements("ItemGroup")
+                .Elements("PackageReference")
+                .Select(e => new ProjectPackage
+                {
+                    Name = e.Attribute("Include").Value,
+                    Version = e.Attribute("Version").Value
+                })
+                .ToList();
             return packages;
         }
 
         private static List<string> GetTargetFrameworks(string fullProjectPath)
         {
             var targetFrameworksList = new List<string>();
-            try
+            var projDefinition = XDocument.Load(fullProjectPath);
+            var targetFramework = projDefinition
+                .Element("Project")
+                .Elements("PropertyGroup")
+                .Elements("TargetFramework")
+                .Select(e => e.Value)
+                .FirstOrDefault();
+            if (!string.IsNullOrEmpty(targetFramework)) targetFrameworksList.Add(targetFramework);
+            else
             {
-                var projDefinition = XDocument.Load(fullProjectPath);
-                var targetFramework = projDefinition
+                var targetFrameworks = projDefinition
                     .Element("Project")
                     .Elements("PropertyGroup")
-                    .Elements("TargetFramework")
+                    .Elements("TargetFrameworks")
                     .Select(e => e.Value)
                     .FirstOrDefault();
-                if (!string.IsNullOrEmpty(targetFramework)) targetFrameworksList.Add(targetFramework);
-                else
-                {
-                    var targetFrameworks = projDefinition
-                        .Element("Project")
-                        .Elements("PropertyGroup")
-                        .Elements("TargetFrameworks")
-                        .Select(e => e.Value)
-                        .FirstOrDefault();
-                    if (!string.IsNullOrEmpty(targetFrameworks)) targetFrameworksList.AddRange(targetFrameworks.Split(";"));
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                if (!string.IsNullOrEmpty(targetFrameworks)) targetFrameworksList.AddRange(targetFrameworks.Split(";"));
             }
             return targetFrameworksList;
         }
