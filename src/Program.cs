@@ -24,6 +24,7 @@ namespace dotnet.nuget.tree
         public List<string> TargetFrameworks { get; set; }
         public List<ProjectPackage> Packages { get; set; }
     }
+
     class Program
     {
         private static readonly List<Regex> _excludedPatterns = new List<Regex>() {
@@ -32,7 +33,7 @@ namespace dotnet.nuget.tree
             new Regex("Test.cs$")
         };
 
-        static HttpClient _httpClient = new HttpClient();
+        static PackageLoader _packageLoader;
 
         public async static Task Main(string[] args)
         {
@@ -41,9 +42,11 @@ namespace dotnet.nuget.tree
             {
                 var options = OptionsCommand.Parse(args);
                 if (options.Verbosity) Console.WriteLine("Working...");
+                _packageLoader = new PackageLoader(options.DisableCache);
                 await Run(options);
                 if (options.Tree)
                     PrintTree(options);
+                if (options.Verbosity && !options.DisableCache) Console.WriteLine($"Cache hits: {_packageLoader._cacheHits}");
             }
             catch (ArgumentException ex)
             {
@@ -112,37 +115,12 @@ namespace dotnet.nuget.tree
             if (deep >= options.Deep) return;
             if (options.Verbosity) Console.WriteLine($"{level}{package.Name} [{package.Version}]");
             level += "   ";
-            var response = await _httpClient.GetAsync($"https://api.nuget.org/v3/registration5-semver1/{package.Name.ToLower()}/{package.Version.ToLower()}.json");
-            if (!response.IsSuccessStatusCode) return;
-            dynamic packageJson = await response.Content.ReadAsAsync<ExpandoObject>();
-            response = await _httpClient.GetAsync(packageJson.catalogEntry);
-            dynamic packageDefinition = await response.Content.ReadAsAsync<ExpandoObject>();
-            if (!IsPropertyExist(packageDefinition, "dependencyGroups")) return;
-            foreach (dynamic dependency in packageDefinition.dependencyGroups)
+
+            await foreach (var packageDep in _packageLoader.GetDependenciesForProject(project, package.Name, package.Version))
             {
-                if (!IsPropertyExist(dependency, "targetFramework")) continue;
-                if (!IsPropertyExist(dependency, "dependencies")) continue;
-                if (
-                    project.TargetFrameworks.Any(targetFramework => dependency.targetFramework.ToLower().Contains(targetFramework)) ||
-                    dependency.targetFramework.ToLower().Contains("netstandard")
-                )
-                {
-                    foreach (dynamic packageDependency in dependency.dependencies)
-                    {
-                        var packageDep = new ProjectPackage
-                        {
-                            Name = packageDependency.id,
-                            Version = Regex.Replace(packageDependency.range, @"[\[\],\)\s]", string.Empty)
-                        };
-                        if (options.Verbosity)
-                            Console.WriteLine($"{level}{packageDep.Name} [{packageDep.Version}]");
-                        await GetDependencies(project, packageDep, options, level + "   ", deep + 1);
-                        package.Dependencies.Add(packageDep);
-                    }
-                    continue;
-                }
+                await GetDependencies(project, packageDep, options, level + "   ", deep + 1);
+                package.Dependencies.Add(packageDep);
             }
-            return;
         }
     }
 }

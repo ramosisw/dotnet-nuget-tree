@@ -15,10 +15,11 @@ namespace dotnet.nuget.tree.Command
         public string OutputDir { get; set; }
         public bool Tree { get; set; } = true;
         public bool Verbosity { get; set; } = false;
+        public bool DisableCache { get; set; } = false;
 
         public OptionsCommand() => PathProject = Path.GetFullPath(".");
 
-        public override string ToString() => $"Options [-d {Deep} -t {Tree} -v {Verbosity} {PathProject}]";
+        public override string ToString() => $"Options [-d {Deep} -t {Tree} -v {Verbosity} --disable-cache {DisableCache} {PathProject}]";
 
         public static OptionsCommand Parse(string[] args)
         {
@@ -28,6 +29,7 @@ namespace dotnet.nuget.tree.Command
                 "-d", "--deep",
                 "-v", "--verbosity",
                 "-t", "--tree",
+                "--disable-cache",
             };
             var optionsCommand = new OptionsCommand();
             for (var i = 0; i < args.Length; i++)
@@ -74,6 +76,9 @@ namespace dotnet.nuget.tree.Command
                             throw new ArgumentException($"Unknown value {argName}={argValue}; expects true or false.");
                         optionsCommand.Tree = tree;
                         break;
+                    case "--disable-cache":
+                        optionsCommand.DisableCache = true;
+                        break;
                     default:
                         optionsCommand.PathProject = Path.GetFullPath(argValue);
                         break;
@@ -98,7 +103,7 @@ namespace dotnet.nuget.tree.Command
             return optionsCommand;
         }
 
-        private static bool ArgWithoutValue(string arg) => new[] { "-v", "--verbosity" }.Contains(arg);
+        private static bool ArgWithoutValue(string arg) => new[] { "-v", "--verbosity", "--disable-cache" }.Contains(arg);
 
         public static List<string> ResolveProjectFile(string path)
         {
