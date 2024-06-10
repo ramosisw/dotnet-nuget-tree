@@ -28,6 +28,7 @@ namespace dotnet.nuget.tree.Command
             Console.WriteLine("  -h, --help            Show command line help.");
             Console.WriteLine("  -d, --deep            Deep search tree, default 2.");
             Console.WriteLine("  -t, --tree            Output like a tree packages, default true.");
+            Console.WriteLine("  --disable-cache       Disable cache of packages, default false.");
             // Console.WriteLine("  -c, --configuration   Load custom nuget.config, e.g. for private nugets.");
         }
     }
