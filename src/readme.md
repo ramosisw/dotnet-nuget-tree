@@ -4,13 +4,14 @@ Usage:
   dotnet-nuget-tree [options] <PATH|PROJECT>
 
 Arguments:
-  <PATH|PROJECT>  Where find *.csproj files to load nugets info. If a file is not specified, the command will search the current directory for one.
+  <PATH|PROJECT>  Where find *.csproj files to load nuget info. If a file is not specified, the command will search the current directory for one.
 
 Options:
   -v, --verbosity       Displays query packages.
   -h, --help            Show command line help.
   -d, --deep            Deep search tree, default 1.
   -t, --tree            Output like a tree packages, default true.
+  --disable-cache       Disable cache of packages, default false.
 ```
 
 ## Example

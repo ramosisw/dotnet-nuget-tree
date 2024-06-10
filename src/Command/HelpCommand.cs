@@ -21,7 +21,7 @@ namespace dotnet.nuget.tree.Command
             Console.WriteLine("  dotnet-nuget-tree [options] <PATH|PROJECT>");
             Console.WriteLine("  ");
             Console.WriteLine("Arguments:");
-            Console.WriteLine("  <PATH|PROJECT>  Where find *.csproj files to load nugets info. If a file is not specified, the command will search the current directory for one.");
+            Console.WriteLine("  <PATH|PROJECT>  Where find *.csproj files to load nuget info. If a file is not specified, the command will search the current directory for one.");
             Console.WriteLine("");
             Console.WriteLine("Options:");
             Console.WriteLine("  -v, --verbosity       Displays query packages.");
@@ -29,7 +29,6 @@ namespace dotnet.nuget.tree.Command
             Console.WriteLine("  -d, --deep            Deep search tree, default 2.");
             Console.WriteLine("  -t, --tree            Output like a tree packages, default true.");
             Console.WriteLine("  --disable-cache       Disable cache of packages, default false.");
-            // Console.WriteLine("  -c, --configuration   Load custom nuget.config, e.g. for private nugets.");
         }
     }
 }
