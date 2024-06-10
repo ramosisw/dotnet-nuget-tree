@@ -10,7 +10,7 @@
     <RootNamespace>dotnet.nuget.tree</RootNamespace>
   </PropertyGroup>
   <PropertyGroup>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
     <Description>A global .NET Core tool that helps to list libs of project</Description>
     <Authors>Julio C. Ramos</Authors>
     <PackAsTool>true</PackAsTool>
@@ -24,8 +24,8 @@
     <PackageOutputPath>c:\src\nugets</PackageOutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="..\LICENSE" Pack="true" PackagePath="" />
-    <!-- <FrameworkReference Include="Microsoft.AspNetCore.App" /> -->
+    <None Include="..\LICENSE" Pack="true" PackagePath="/" />
+    <None Include="readme.md" Pack="true" PackagePath="/" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />

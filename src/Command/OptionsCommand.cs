@@ -17,79 +17,20 @@ namespace dotnet.nuget.tree.Command
         public bool Verbosity { get; set; } = false;
         public bool DisableCache { get; set; } = false;
 
+        private static readonly string[] sourceArray = ["-v", "--verbosity", "--disable-cache"];
+        private static readonly string[] validOptions = ["-d", "--deep", "-v", "--verbosity", "-t", "--tree", "--disable-cache"];
+
         public OptionsCommand() => PathProject = Path.GetFullPath(".");
 
         public override string ToString() => $"Options [-d {Deep} -t {Tree} -v {Verbosity} --disable-cache {DisableCache} {PathProject}]";
 
         public static OptionsCommand Parse(string[] args)
         {
-            var validOptions = new[] {
-                // "-c", "--configuration",
-                // "-o", "--output-dir",
-                "-d", "--deep",
-                "-v", "--verbosity",
-                "-t", "--tree",
-                "--disable-cache",
-            };
-            var optionsCommand = new OptionsCommand();
-            for (var i = 0; i < args.Length; i++)
-            {
-                var arg = args[i].Trim();
-                var argSplit = arg.Split("=");
-                var argName = argSplit[0];
-                var argValue = args[i];
-                if (arg.StartsWith("-") && !validOptions.Contains(argName)) throw new ArgumentException($"Unknown option {argName}");
-                if (arg.StartsWith("-") && !ArgWithoutValue(arg))
-                {
-                    if (arg.Contains("=") && !string.IsNullOrEmpty(argSplit[1]))
-                        argValue = argSplit[1];
-                    else if (i + 1 < args.Length)
-                        argValue = args[i++ + 1];
-                    else
-                        throw new ArgumentException($"No value was specified for the option {argName}");
-
-                }
-                switch (argName.ToLower())
-                {
-                    case "-v":
-                    case "--verbosity":
-                        optionsCommand.Verbosity = true;
-                        break;
-                    case "-c":
-                    case "--configuration":
-                        optionsCommand.Configuration = argValue;
-                        break;
-                    case "-o":
-                    case "--output-dir":
-                        optionsCommand.OutputDir = argValue;
-                        break;
-                    case "-d":
-                    case "--deep":
-                        if (!int.TryParse(argValue, out var deep))
-                            throw new ArgumentException($"Unknown value {argName}={argValue}; expects a integer number.");
-                        optionsCommand.Deep = deep;
-                        break;
-                    case "-t":
-                    case "--tree":
-                        var tree = true;
-                        if (!string.IsNullOrWhiteSpace(argValue) && !bool.TryParse(argValue, out tree))
-                            throw new ArgumentException($"Unknown value {argName}={argValue}; expects true or false.");
-                        optionsCommand.Tree = tree;
-                        break;
-                    case "--disable-cache":
-                        optionsCommand.DisableCache = true;
-                        break;
-                    default:
-                        optionsCommand.PathProject = Path.GetFullPath(argValue);
-                        break;
-                }
-            }
-
+            var optionsCommand = SearchOptionsCommand(args);
             var projectPathList = ResolveProjectFile(optionsCommand.PathProject);
             foreach (var projectPath in projectPathList)
             {
                 var projectName = Path.GetFileNameWithoutExtension(projectPath);
-                // Console.WriteLine($"Searching packages for {projectName}");
                 var packages = GetPackages(projectPath);
                 optionsCommand.ProjectList.Add(new Project
                 {
@@ -103,7 +44,70 @@ namespace dotnet.nuget.tree.Command
             return optionsCommand;
         }
 
-        private static bool ArgWithoutValue(string arg) => new[] { "-v", "--verbosity", "--disable-cache" }.Contains(arg);
+        private static OptionsCommand SearchOptionsCommand(string[] args)
+        {
+            var optionsCommand = new OptionsCommand();
+            for (var i = 0; i < args.Length; i++)
+            {
+                var arg = args[i].Trim();
+                var argSplit = arg.Split("=");
+                var argName = argSplit[0];
+                var argValue = args[i];
+                if (arg.StartsWith('-') && !validOptions.Contains(argName)) throw new ArgumentException($"Unknown option {argName}");
+                if (arg.StartsWith('-') && !ArgWithoutValue(arg))
+                {
+                    if (arg.Contains('=') && !string.IsNullOrEmpty(argSplit[1]))
+                        argValue = argSplit[1];
+                    else if (i + 1 < args.Length)
+                        argValue = args[i + 1];
+                    else
+                        throw new ArgumentException($"No value was specified for the option {argName}");
+
+                }
+                Assign(optionsCommand, argName, argValue);
+            }
+            return optionsCommand;
+        }
+
+        private static void Assign(OptionsCommand optionsCommand, string argName, string argValue)
+        {
+            switch (argName.ToLower())
+            {
+                case "-v":
+                case "--verbosity":
+                    optionsCommand.Verbosity = true;
+                    break;
+                case "-c":
+                case "--configuration":
+                    optionsCommand.Configuration = argValue;
+                    break;
+                case "-o":
+                case "--output-dir":
+                    optionsCommand.OutputDir = argValue;
+                    break;
+                case "-d":
+                case "--deep":
+                    if (!int.TryParse(argValue, out var deep))
+                        throw new ArgumentException($"Unknown value {argName}={argValue}; expects a integer number.");
+                    optionsCommand.Deep = deep;
+                    break;
+                case "-t":
+                case "--tree":
+                    var tree = true;
+                    if (!string.IsNullOrWhiteSpace(argValue) && !bool.TryParse(argValue, out tree))
+                        throw new ArgumentException($"Unknown value {argName}={argValue}; expects true or false.");
+                    optionsCommand.Tree = tree;
+                    break;
+                case "--disable-cache":
+                    optionsCommand.DisableCache = true;
+                    break;
+                default:
+                    optionsCommand.PathProject = Path.GetFullPath(argValue);
+                    break;
+            }
+        }
+
+        private static bool ArgWithoutValue(string arg) => sourceArray.Contains(arg);
 
         public static List<string> ResolveProjectFile(string path)
         {
@@ -127,9 +131,8 @@ namespace dotnet.nuget.tree.Command
 
         private static List<ProjectPackage> GetPackages(string fullProjectPath)
         {
-            var packages = new List<ProjectPackage>();
             var projDefinition = XDocument.Load(fullProjectPath);
-            packages = projDefinition
+            var packages = projDefinition
                 .Element("Project")
                 .Elements("ItemGroup")
                 .Elements("PackageReference")
