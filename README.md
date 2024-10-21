@@ -7,6 +7,12 @@
 
 A global .NET Core tool to list dependencies and sub-dependencies of projects in a directory or project file.
 
+This tool was created to help you find libraries that are not compatible between nugets during a framework upgrade, for example, nuget C used in nugets A and B is not compatible and the build log only tells you that an inferior version of library C was detected and does not indicate who uses said library.
+
+The .NET team has already developed something similar that I think is better by giving options such as which libraries you can update, which ones are obsolete or incompatible.
+
+https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-list-package
+
 ## Table of Contents
 
 - [Install](#installation)
