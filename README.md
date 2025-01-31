@@ -44,7 +44,7 @@ Options:
 # Example
 
 ```powershell
-$ dotnet-nuget-tree -d 2
+$ dotnet-nuget-tree -d=2
 root
 ├── dotnet-nuget-tree/ 3 packages
 │   ├── Microsoft.AspNet.WebApi.Client [5.2.7]
